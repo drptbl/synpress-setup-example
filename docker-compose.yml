@@ -8,7 +8,7 @@ services:
       - DISPLAY=display:0.0
       - PRIVATE_KEY=${PRIVATE_KEY}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
-      - SYNDEBUG=${SYNDEBUG}
+      - DEBUG=${DEBUG}
     depends_on:
       - display
       - video
