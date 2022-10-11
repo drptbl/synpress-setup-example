@@ -91,7 +91,7 @@ jobs:
           COMPOSE_DOCKER_CLI_BUILD: 1
           DOCKER_BUILDKIT: 1
           DOCKER_DEFAULT_PLATFORM: linux/amd64
-          PRIVATE_KEY: $PRIVATE_KEY
+          PRIVATE_KEY: ${{ env.PRIVATE_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NGROK_AUTH: ${{ secrets.NGROK_AUTH }}
           DEBUG: synpress:*
