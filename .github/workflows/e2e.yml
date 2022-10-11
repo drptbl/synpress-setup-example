@@ -74,15 +74,22 @@ jobs:
           if [ ${{ matrix.resolution }} == 'low' ]
           then
             echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY1 }}" >> $GITHUB_ENV
+            echo "TEST=1" >> $GITHUB_ENV
           elif [ ${{ matrix.resolution }} == 'medium' ]
           then
             echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY2 }}" >> $GITHUB_ENV
+            echo "TEST=2" >> $GITHUB_ENV
           elif [ ${{ matrix.resolution }} == 'high' ]
           then
             echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY3 }}" >> $GITHUB_ENV
+            echo "TEST=3" >> $GITHUB_ENV
           else
             echo "Nothing has been set."
+            echo "TEST=4" >> $GITHUB_ENV
           fi
+
+      - name: Test
+        run: echo $TEST
 
       - name: Run e2e tests (${{ matrix.resolution }} resolution)
         run: |
