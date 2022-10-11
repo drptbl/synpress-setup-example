@@ -1,7 +1,7 @@
-import Page from "../page";
+import Page from '../page';
 
 export default class Onboard extends Page {
   getBrowserWalletBtn() {
-    return cy.get("onboard-v2").shadow().findByText("MetaMask");
+    return cy.get('onboard-v2').shadow().findByText('MetaMask');
   }
 }

@@ -1,6 +1,6 @@
-import Page from "../page";
-import Header from "./header";
-import Onboard from "./onboard";
+import Page from '../page';
+import Header from './header';
+import Onboard from './onboard';
 
 export default class HomePage extends Page {
   constructor() {
@@ -10,7 +10,7 @@ export default class HomePage extends Page {
   }
 
   visit() {
-    cy.visit("/");
+    cy.visit('/');
   }
 
   connectBrowserWallet() {
@@ -25,12 +25,12 @@ export default class HomePage extends Page {
   waitUntilLoggedIn() {
     cy.waitUntil(() => {
       const walletAddress = this.header.getWalletAddress();
-      return walletAddress.should("exist");
+      return walletAddress.should('exist');
     });
   }
 
   getLoggedInWalletAddress() {
     const walletAddress = this.header.getWalletAddress();
-    return walletAddress.invoke("text");
+    return walletAddress.invoke('text');
   }
 }

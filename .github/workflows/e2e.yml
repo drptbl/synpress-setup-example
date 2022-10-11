@@ -12,7 +12,8 @@ concurrency:
 jobs:
   # good security practices!
   audit:
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' ||
+    if:
+      github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' ||
       github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
@@ -27,16 +28,19 @@ jobs:
         run: audit-ci --critical --report-type full
 
       - name: Lockfile lint
-        run: lockfile-lint -p yarn.lock --type yarn --allowed-schemes "https:" "git+https:" --empty-hostname false
+        run:
+          lockfile-lint -p yarn.lock --type yarn --allowed-schemes "https:"
+          "git+https:" --empty-hostname false
 
   e2e:
     needs: audit
-    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' ||
+    if:
+      github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' ||
       github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        resolution: ["low", "medium", "high"]
+        resolution: ['low', 'medium', 'high']
 
     steps:
       # npm > 6 doesn't play well with docker on gh actions
@@ -62,7 +66,9 @@ jobs:
 
       # thanks to this, you will never have issues with transactions in your e2e tests
       # because every transaction will be done from different wallet (and tests are ran in parallel)
-      - name: Set private keys for e2e testing (different wallet for each resolution)
+      - name:
+          Set private keys for e2e testing (different wallet for each
+          resolution)
         shell: bash
         run: |
           if [ ${{ matrix.resolution }} == 'low' ]
