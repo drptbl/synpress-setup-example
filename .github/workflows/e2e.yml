@@ -1,0 +1,99 @@
+name: e2e pipeline
+
+on:
+  push:
+  pull_request:
+    branches: [master, dev]
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  # good security practices!
+  audit:
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' ||
+      github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    container:
+      image: synthetixio/docker-sec-tools:16.17-alpine
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # pin@v2
+
+      - name: Audit dependencies
+        run: audit-ci --critical --report-type full
+
+      - name: Lockfile lint
+        run: lockfile-lint -p yarn.lock --type yarn --allowed-schemes "https:" "git+https:" --empty-hostname false
+
+  e2e:
+    needs: audit
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev' ||
+      github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        resolution: ["low", "medium", "high"]
+
+    steps:
+      # npm > 6 doesn't play well with docker on gh actions
+      - name: Chown workspace
+        run: chown -R $(whoami) .
+
+      - name: Checkout
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # pin@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@8b122486cedac8393e77aa9734c3528886e4a1a8 # pin@v1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@dc7b9719a96d48369863986a06765841d7ea23f6 # pin@v1
+
+      - name: Cache Docker layers
+        uses: actions/cache@56461b9eb0f8438fd15c7a9968e3c9ebb18ceff1 # pin@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      # thanks to this, you will never have issues with transactions in your e2e tests
+      # because every transaction will be done from different wallet (and tests are ran in parallel)
+      - name: Set private keys for e2e testing (different wallet for each resolution)
+        shell: bash
+        run: |
+          if [ ${{ matrix.resolution }} == 'low' ]
+          then
+            echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY1 }}" >> $GITHUB_ENV
+          elif [ ${{ matrix.resolution }} == 'medium' ]
+          then
+            echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY2 }}" >> $GITHUB_ENV
+          elif [ ${{ matrix.resolution }} == 'high' ]
+          then
+            echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY3 }}" >> $GITHUB_ENV
+          fi
+
+      - name: Run e2e tests (${{ matrix.resolution }} resolution)
+        run: |
+          docker-compose --env-file ./${{ matrix.resolution }}-res.env up --build --exit-code-from synpress
+        env:
+          COMPOSE_DOCKER_CLI_BUILD: 1
+          DOCKER_BUILDKIT: 1
+          DOCKER_DEFAULT_PLATFORM: linux/amd64
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NGROK_AUTH: ${{ secrets.NGROK_AUTH }}
+
+      - name: Archive e2e artifacts (${{ matrix.resolution }} resolution)
+        uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v2
+        if: always()
+        with:
+          name: e2e-artifacts-${{ matrix.resolution }}-resolution
+          path: |
+            docker/videos
+            docker/videos-ci
+            docker/screenshots
+        continue-on-error: true

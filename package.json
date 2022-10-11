@@ -1,0 +1,14 @@
+{
+  "name": "synpress-setup-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:drptbl/synpress-setup-example.git",
+  "author": "Jakub Mucha <jakub.mucha@icloud.com>",
+  "license": "MIT",
+  "scripts": {
+    "test:e2e": "synpress run --config baseUrl=https://staking.synthetix.io"
+  },
+  "devDependencies": {
+    "@synthetixio/synpress": "latest"
+  }
+}
