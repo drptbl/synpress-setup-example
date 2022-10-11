@@ -6,7 +6,8 @@
   "author": "Jakub Mucha <jakub.mucha@icloud.com>",
   "license": "MIT",
   "scripts": {
-    "test:e2e": "synpress run --config baseUrl=https://staking.synthetix.io"
+    "test:e2e": "synpress run --config baseUrl=https://staking.synthetix.io",
+    "test:e2e:local": "SECRET_WORDS='test test test test test test test test test test test junk' synpress run --config baseUrl=https://staking.synthetix.io"
   },
   "devDependencies": {
     "@synthetixio/synpress": "latest"
