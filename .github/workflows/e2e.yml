@@ -80,6 +80,8 @@ jobs:
           elif [ ${{ matrix.resolution }} == 'high' ]
           then
             echo "PRIVATE_KEY=${{ secrets.PRIVATE_KEY3 }}" >> $GITHUB_ENV
+          else
+            echo "Nothing has been set."
           fi
 
       - name: Run e2e tests (${{ matrix.resolution }} resolution)
@@ -92,6 +94,7 @@ jobs:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NGROK_AUTH: ${{ secrets.NGROK_AUTH }}
+          DEBUG: synpress:*
 
       - name: Archive e2e artifacts (${{ matrix.resolution }} resolution)
         uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8 # pin@v2
