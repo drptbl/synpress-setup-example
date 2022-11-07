@@ -9,6 +9,8 @@ services:
       - PRIVATE_KEY=${PRIVATE_KEY}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - DEBUG=${DEBUG}
+      - GH_PAT=${GH_PAT}
+      - GH_USERNAME=${GH_USERNAME}
     depends_on:
       - display
       - video
