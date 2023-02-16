@@ -38,3 +38,8 @@ jobs:
             tests/e2e/videos
             tests/e2e/screenshots
         continue-on-error: true
+
+      - uses: OrbitalOwen/desktop-screenshot-action@0.1
+        with:
+          file-name: 'desktop.jpg'
+        continue-on-error: true
