@@ -25,7 +25,7 @@ jobs:
         run: |
           sudo apt-get install ffmpeg x11grab
           npm install screencap -g
-          screencap 90 screen_capture.mp4
+          screencap 90 screen_capture.mp4 &
 
       - name: Run e2e tests
         uses: cypress-io/github-action@v5
