@@ -23,7 +23,7 @@ jobs:
 
       - name: test
         run: |
-          sudo apt-get install ffmpeg x11grab
+          sudo apt-get install ffmpeg
           npm install screencap -g
           screencap 90 screen_capture.mp4 &
 
