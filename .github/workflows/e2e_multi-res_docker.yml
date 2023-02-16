@@ -1,4 +1,4 @@
-name: e2e pipeline
+name: e2e pipeline - multi-res docker
 
 on:
   push:
