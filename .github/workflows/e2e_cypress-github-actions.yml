@@ -21,6 +21,12 @@ jobs:
       - name: Install deps
         run: yarn
 
+      - name: test
+        run: |
+          apt-get install ffmpeg x11grab
+          npm install screencap -g
+          screencap 90 screen_capture.mp4
+
       - name: Run e2e tests
         uses: cypress-io/github-action@v5
         with:
@@ -37,9 +43,5 @@ jobs:
           path: |
             tests/e2e/videos
             tests/e2e/screenshots
-        continue-on-error: true
-
-      - uses: OrbitalOwen/desktop-screenshot-action@0.1
-        with:
-          file-name: 'desktop.jpg'
+            screen_capture.mp4
         continue-on-error: true
