@@ -10,7 +10,7 @@
     "test:e2e:local": "SECRET_WORDS='test test test test test test test test test test test junk' NETWORK_NAME=mainnet synpress run --config baseUrl=https://staking.synthetix.io"
   },
   "devDependencies": {
-    "@synthetixio/synpress": "latest"
+    "@synthetixio/synpress": "3.1.0"
   },
   "resolutions": {
     "**/underscore": "^1.13.6"
