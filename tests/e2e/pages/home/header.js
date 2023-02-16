@@ -1,12 +1,10 @@
 import Page from '../page';
 export default class Header extends Page {
-  getUserMenu() {
-    return cy.findByTestId('user-menu');
-  }
   getConnectWalletBtn() {
-    return cy.findByTestId('connect-wallet');
+    return cy.get('#app button:nth-child(3)').first();
   }
   getWalletAddress() {
-    return cy.findByTestId('wallet-address');
+    // eslint-disable-next-line ui-testing/no-css-page-layout-selector
+    return cy.get('#app button:nth-child(4) > p');
   }
 }

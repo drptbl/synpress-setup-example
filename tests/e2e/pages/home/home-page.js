@@ -1,11 +1,13 @@
 import Page from '../page';
 import Header from './header';
+import Terms from './terms';
 import Onboard from './onboard';
 
 export default class HomePage extends Page {
   constructor() {
     super();
     this.header = new Header();
+    this.terms = new Terms();
     this.onboard = new Onboard();
   }
 
@@ -13,9 +15,14 @@ export default class HomePage extends Page {
     cy.visit('/');
   }
 
+  acceptTermsAndConditions() {
+    const termsModal = this.terms.getTermsModal();
+    termsModal.scrollTo('bottom');
+    const acceptTermsButton = this.terms.getAcceptTermsButton();
+    acceptTermsButton.click();
+  }
+
   connectBrowserWallet() {
-    const userMenu = this.header.getUserMenu();
-    userMenu.click();
     const connectWalletButton = this.header.getConnectWalletBtn();
     connectWalletButton.click();
     const onboardBrowserWalletButton = this.onboard.getBrowserWalletBtn();
@@ -27,10 +34,5 @@ export default class HomePage extends Page {
       const walletAddress = this.header.getWalletAddress();
       return walletAddress.should('exist');
     });
-  }
-
-  getLoggedInWalletAddress() {
-    const walletAddress = this.header.getWalletAddress();
-    return walletAddress.invoke('text');
   }
 }
